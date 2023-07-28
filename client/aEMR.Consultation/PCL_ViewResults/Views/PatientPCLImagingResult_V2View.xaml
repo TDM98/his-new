@@ -1,0 +1,75 @@
+﻿<UserControl
+    x:Class="aEMR.ConsultantEPrescription.Views.PatientPCLImagingResult_V2View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Converters="clr-namespace:aEMR.Common.Converters;assembly=aEMR.Common"
+    xmlns:Resources="clr-namespace:eHCMSLanguage;assembly=aEMRLanguage"
+    xmlns:cal="http://www.caliburnproject.org"
+    xmlns:commonctrl="clr-namespace:aEMR.Controls;assembly=aEMR.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dxp="http://schemas.devexpress.com/winfx/2008/xaml/printing"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+    MinWidth="800"
+    MinHeight="500"
+    d:DesignHeight="500"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Resources:eHCMSResources x:Key="eHCMSResources" />
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Converters:BooleanToVisibilityNotConverter x:Key="BooleanToVisibilityNotConverter" />
+    </UserControl.Resources>
+    <Grid
+        HorizontalAlignment="Stretch"
+        Background="White"
+        ShowGridLines="False">
+        <toolkit:BusyIndicator
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            Margin="0,0,0,10"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            DisplayAfter="0:0:0.100"
+            IsBusy="{Binding IsLoading, Mode=OneWay}">
+            <TabControl>
+                <TabItem
+                    HorizontalAlignment="Center"
+                    cal:Message.Attach="[Event Loaded]=[Action TabHinhAnhPCL_New_Loaded($source)]"
+                    Header="{Binding T2055_G1_KQua, Source={StaticResource eHCMSResources}}"
+                    Visibility="{Binding mPCLImage_New, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <dxp:DocumentPreviewControl
+                        Grid.Column="1"
+                        Width="Auto"
+                        Height="Auto"
+                        AutoShowParametersPanel="False"
+                        DocumentSource="{Binding ReportModel, Mode=OneWay}" />
+                </TabItem>
+                <TabItem
+                    cal:Message.Attach="[Event Loaded]=[Action TabHinhAnhPCL_Loaded($source)]"
+                    Header="{Binding T2068_G1_KQuaCu, Source={StaticResource eHCMSResources}}"
+                    Visibility="{Binding mPCLImage, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ContentControl
+                        x:Name="PCLOldView"
+                        Height="800"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        Visibility="{Binding mPCLImage, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                </TabItem>
+                <TabItem
+                    HorizontalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Header="Hình ảnh từ PAC"
+                    Visibility="{Binding IsShowViewerImageResultFromPAC, Converter={StaticResource VisibilityConverter}}">
+                    <wv2:WebView2
+                        Name="webView"
+                        Width="Auto"
+                        Height="900"
+                        MaxHeight="1200"
+                        Source="{Binding SourceLink, Mode=TwoWay}" />
+                </TabItem>
+            </TabControl>
+        </toolkit:BusyIndicator>
+    </Grid>
+</UserControl>
